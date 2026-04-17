@@ -9,19 +9,22 @@ router.post("/add",protect,async (req,res)=>{
         if(!cart){
             cart=await Cart.create({
                 userId:req.user.id,
-                items:[{productId,quantity:1}]
+                item:[{productId,quantity:1}]
             })
+            console.log("if block",cart)
         }else{
-            const itemIndex=cart.items.findIndex(item=>item.productId.toString()==productId)
+            console.log("from else",cart)
+            const itemIndex=cart.item.find(item=>item.productId.toString()==productId)
             if(itemIndex>-1){
-                cart.items[itemIndex].quantity+=1
+                cart.item[itemIndex].quantity+=1
             }
             else{
-                cart.items.push({productId,quantity:1})
+                cart.item.push({productId,quantity:1})
             }
-            await cart.save()
+            
         }
-        return res.status(201).json({message:"Added to cart"})
+        await cart.save()
+        return res.status(201).json({message:"Added to cart"}) 
     }
     catch(err){
         return res.status(500).json({message:`error from cart ${err}`})
@@ -30,7 +33,7 @@ router.post("/add",protect,async (req,res)=>{
 
 router.get("/",protect,async(req,res)=>{
     try{
-        const cart=await Cart.findOne({userId:req.user.id}).populate("items.productId")
+        const cart=await Cart.findOne({userId:req.user.id}).populate("item.productId")
         console.log(cart)
         return res.status(200).json(cart)
     }

@@ -23,16 +23,15 @@ function Home() {
 
   const addToCart = async (id) => {
     API.post("/cart/add",{productId:id})
-    .then((res)=>{
+      .then((res)=>{
         if(res.status==201){
-            alert("Added to cart")
-            Navigate("/cart")
+          alert("Added to cart")
+          
         }
-    })
-    .catch((err)=>{
+      })
+      .catch((err)=>{
         console.log(err)
-    })
-    
+      })
   };
 
   return (
